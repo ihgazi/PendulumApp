@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_pendulum/painter.dart';
-import 'package:vector_math/vector_math_64.dart' as v;
 
 import 'pendulum.dart';
 
@@ -19,15 +18,14 @@ class _SimulationWidgetState extends State<SimulationWidget> {
 
   @override
   void initState() {
-    //setting gravity to 0.1
     setUpPendulum();
     super.initState();
     update();
   }
 
-  //setting up the particles and springs
+  //setting up the paendulum
   void setUpPendulum() {
-    p = Pendulum(200, 200, 90);
+    p = Pendulum(200, 400, 90);
     //p.locked = true;
   }
 
@@ -47,15 +45,51 @@ class _SimulationWidgetState extends State<SimulationWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Pendulum Simulation'),
-      ),
-      body: Center(
-        child: CustomPaint(
-          painter: PendulumPainter(p),
-          size: Size(400, 800),
-        ),
-      ),
+      body: Stack(
+        children: [
+          GestureDetector(
+            onDoubleTap: () {
+              p.locked = !p.locked;
+            },
+              child: CustomPaint(
+                painter: PendulumPainter(p),
+                size: Size(400, 800),
+            )
+          ),
+          Positioned(
+            top: 50,
+            left: 90,
+            child: Column (
+              children: [
+                // Slider for changind gravity
+                Text("Gravity: ${p.gravity.toStringAsFixed(2)}"),
+                Slider(
+                  value: p.gravity,
+                  min: 5.0,
+                  max: 10.0,
+                  onChanged: (value) {
+                    setState(() {
+                      p.gravity = value;
+                    });
+                  }
+                ),
+                // Slider for changing length
+                Text("Rope Length: ${p.length.toStringAsFixed(2)}"),
+                Slider(
+                  value: p.length,
+                  min: 0.5,
+                  max: 3.5,
+                  onChanged: (value) {
+                    setState(() {
+                      p.length = value;
+                    });
+                  }
+                )
+              ]
+            )
+          )
+        ]
+      )
     );
   }
 }

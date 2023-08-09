@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Rope simulation',
+      title: 'Flutter Pendulum Simulation',
       theme: ThemeData.dark(useMaterial3: true),
       themeMode: ThemeMode.dark,
       home: const SimulationWidget(),

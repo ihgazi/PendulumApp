@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:vector_math/vector_math_64.dart';
 
-// Dart class to represent a particle in physics simulation
+// Dart class to represent a pendulum in physics simulation
 
 class Pendulum {
   late double length;
