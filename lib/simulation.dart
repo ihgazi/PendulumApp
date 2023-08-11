@@ -25,7 +25,7 @@ class _SimulationWidgetState extends State<SimulationWidget> {
 
   //setting up the paendulum
   void setUpPendulum() {
-    p = Pendulum(200, 400, 90);
+    p = Pendulum(50, 50, 90);
     //p.locked = true;
   }
 
@@ -45,50 +45,58 @@ class _SimulationWidgetState extends State<SimulationWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          GestureDetector(
-            onDoubleTap: () {
-              p.locked = !p.locked;
-            },
-              child: CustomPaint(
-                painter: PendulumPainter(p),
-                size: Size(400, 800),
+      body: Center(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            GestureDetector(
+              onDoubleTap: () {
+                // Resetting simulation
+                setUpPendulum();
+                p.locked = true;
+              },
+              onTap: () {
+                // Freezing simulation
+                p.locked = !p.locked;
+              },
+                child: CustomPaint(
+                  painter: PendulumPainter(p),
+                  size: Size(100, 200),
+              )
+            ),
+            Padding(
+              padding: EdgeInsets.only(top:50),
+              child: Column (
+                children: [
+                  // Slider for changind gravity
+                  Text("Gravity: ${p.gravity.toStringAsFixed(2)}"),
+                  Slider(
+                    value: p.gravity,
+                    min: 5.0,
+                    max: 10.0,
+                    onChanged: (value) {
+                      setState(() {
+                        p.gravity = value;
+                      });
+                    }
+                  ),
+                  // Slider for changing length
+                  Text("Rope Length: ${p.length.toStringAsFixed(2)}"),
+                  Slider(
+                    value: p.length,
+                    min: 0.5,
+                    max: 3.5,
+                    onChanged: (value) {
+                      setState(() {
+                        p.length = value;
+                      });
+                    }
+                  )
+                ]
+              )
             )
-          ),
-          Positioned(
-            top: 50,
-            left: 90,
-            child: Column (
-              children: [
-                // Slider for changind gravity
-                Text("Gravity: ${p.gravity.toStringAsFixed(2)}"),
-                Slider(
-                  value: p.gravity,
-                  min: 5.0,
-                  max: 10.0,
-                  onChanged: (value) {
-                    setState(() {
-                      p.gravity = value;
-                    });
-                  }
-                ),
-                // Slider for changing length
-                Text("Rope Length: ${p.length.toStringAsFixed(2)}"),
-                Slider(
-                  value: p.length,
-                  min: 0.5,
-                  max: 3.5,
-                  onChanged: (value) {
-                    setState(() {
-                      p.length = value;
-                    });
-                  }
-                )
-              ]
-            )
-          )
-        ]
+          ]
+        )
       )
     );
   }
