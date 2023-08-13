@@ -1,30 +1,24 @@
 import 'dart:math';
 
 import 'package:vector_math/vector_math_64.dart';
-
+import 'dart:ui';
 // Dart class to represent a pendulum in physics simulation
 
 class Pendulum {
   late double length;
   late double angularVel;
   late double angularAcc;
-  late Vector2 pivotPos; // Coordinate of pivot point
-  late Vector2 bobPos; // Coordinate of Bob
+  late Offset pivot;
   late double angle;
   late double mass;
   late bool locked;
   late double gravity;
-
-  // Canvas parameters
-  /**Color paintcolor = Color(Random().nextInt(0xffffffff));
-  late Offset origin;
-  List<Offset> trailPoints = [];**/
+  List<Offset> trailPoints = [];
 
   Pendulum(double x, double y, double theta) {
-    pivotPos = Vector2(x,y);
     length = 2;
     angle = theta;
-    bobPos = Vector2(x+60*length*sin(angle*pi/180), y+60*length*cos(angle*pi/180));
+    pivot = Offset(x,y);
     mass = 1;
     gravity = 9.80665;
     angularVel = 0;
@@ -32,10 +26,13 @@ class Pendulum {
     locked = false;
   }
 
-  void updatePosition(double x, double y) {
+  /**void updatePosition(double x, double y) {
     bobPos = Vector2(x,y);
-  }
+  }**/
 
+  Offset getBobPos() {
+    return (pivot + Offset(60*length*sin(angle*pi/180), 60*length*cos(angle*pi/180)));
+  }
   void updateLength(double l) {
     length = l;
   }
@@ -44,16 +41,23 @@ class Pendulum {
     gravity = g;
   }
 
-  void rotate() {
+  /**void rotate() {
     bobPos = pivotPos + Vector2(60*length*sin(angle*pi/180), 60*length*cos(angle*pi/180));
+  }**/
+
+  void addTrailPoint() {
+    trailPoints.add(getBobPos());
+    if (trailPoints.length > 200) {
+      trailPoints.removeAt(0);
+    }
   }
+
   void applyForce() {
     if (locked) return;
     angularAcc = -(gravity/length)*sin(angle*pi/180);
     // angularVel *= 0.9; // Damping Coefficient
     angularVel += angularAcc * 0.167;
     angle += angularVel * 0.167;
-    rotate();
     angularAcc = 0;
   }
   //Offset get endPoint => Offset((length*sin(angle)), (length*cos(angle)))+origin;

@@ -32,6 +32,7 @@ class _SimulationWidgetState extends State<SimulationWidget> {
   update() {
     timer = Timer.periodic(const Duration(milliseconds: 16), (timer) {
       p.applyForce();
+      p.addTrailPoint();
       setState(() {});
     });
   }
